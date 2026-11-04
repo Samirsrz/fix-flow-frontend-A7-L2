@@ -104,5 +104,6 @@ export const config = {
     "/resident/:path*",
     "/login",
     "/register",
+     "/complete-profile",
   ],
 };

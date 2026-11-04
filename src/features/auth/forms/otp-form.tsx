@@ -1,0 +1,19 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
+import Link from "next/link"
+import { motion } from "motion/react"
+import { ArrowLeft, Loader2 } from "lucide-react"
+import { z } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+
+const schema = z.object({ otp: z.string().length(6) })
+type Values = z.infer<typeof schema>
+type Props = { email: string; onSubmit: (otp: string) => Promise<void>; isLoading: boolean; onResend: () => void; resendCooldown: number }
+
+export default function OtpForm({ email, onSubmit, isLoading, onResend, resendCooldown }: Props) { const inputs = useRef<Array<HTMLInputElement | null>>([]); const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { otp: "" } }); const [digits, setDigits] = useState(["", "", "", "", "", ""]); useEffect(() => { inputs.current[0]?.focus() }, []); const update = (next: string[]) => { setDigits(next); form.setValue("otp", next.join(""), { shouldValidate: true }) }; const onChange = (index: number, value: string) => { const digit = value.replace(/\D/g, "").slice(-1); const next = [...digits]; next[index] = digit; update(next); if (digit && index < 5) inputs.current[index + 1]?.focus() }; const onKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => { if (event.key === "Backspace" && !digits[index] && index > 0) inputs.current[index - 1]?.focus() }; const onPaste = (event: React.ClipboardEvent<HTMLInputElement>) => { event.preventDefault(); const pasted = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6).split(""); update([...pasted, ...Array(6 - pasted.length).fill("")]); inputs.current[Math.min(pasted.length, 5)]?.focus() }; return <main className="flex min-h-svh items-center justify-center bg-muted/30 px-6 py-12"><motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5 }} className="w-full max-w-md"><Card className="rounded-2xl"><CardHeader className="text-center"><Link href="/login" className="mb-5 inline-flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4"/>Back to login</Link><CardTitle className="font-heading text-3xl">Verify your email</CardTitle><CardDescription>Enter the 6-digit code sent to <span className="font-medium text-foreground">{email}</span>.</CardDescription></CardHeader><CardContent><Form {...form}><form onSubmit={form.handleSubmit(({ otp }) => onSubmit(otp))} className="flex flex-col gap-6"><FormField control={form.control} name="otp" render={() => <FormItem><FormControl><div className="flex justify-center gap-2"><span className="sr-only">Verification code</span>{digits.map((digit, index) => <Input key={index} ref={(element) => { inputs.current[index] = element }} inputMode="numeric" maxLength={1} value={digit} aria-label={`Digit ${index + 1}`} onChange={(event) => onChange(index, event.target.value)} onKeyDown={(event) => onKeyDown(index, event)} onPaste={onPaste} className="size-11 rounded-lg p-0 text-center text-lg font-semibold"/> )}</div></FormControl><FormMessage/></FormItem>}/><Button type="submit" disabled={isLoading} className="w-full">{isLoading && <Loader2 data-icon="inline-start" className="animate-spin"/>}{isLoading ? "Verifying…" : "Verify email"}</Button></form></Form><div className="mt-5 text-center text-sm text-muted-foreground">Didn&apos;t receive it? <Button type="button" variant="ghost" size="sm" disabled={resendCooldown > 0} onClick={onResend}>{resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend OTP"}</Button></div></CardContent></Card></motion.div></main> }
