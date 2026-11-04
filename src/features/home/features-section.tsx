@@ -1,0 +1,7 @@
+import { Card, CardContent } from '@/components/ui/card'
+import { features } from './home-content'
+import { Reveal } from './reveal'
+
+export function FeaturesSection() {
+  return <section id="features" className="bg-muted/40 px-5 py-20 sm:px-8 lg:px-10"><div className="mx-auto max-w-7xl"><Reveal><p className="text-sm font-semibold text-primary">Why FixFlow</p><h2 className="mt-3 max-w-2xl font-heading text-3xl font-semibold tracking-tight sm:text-4xl">Everything a community needs to fix things fast</h2><p className="mt-4 max-w-2xl text-muted-foreground">One simple workflow keeps every person informed, from the first report to the final rating.</p></Reveal><div className="mt-10 grid gap-4 lg:grid-cols-3">{features.map(({ title, description, icon: Icon, wide }, index) => <Reveal key={title} delay={index * 0.05} className={wide ? 'lg:col-span-2' : ''}><Card className="group h-full rounded-2xl border-border/70 bg-background/80 shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md"><CardContent className="flex h-full flex-col gap-8 p-6 sm:p-7"><div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground"><Icon aria-hidden="true" /></div><div><h3 className="font-heading text-lg font-semibold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p></div></CardContent></Card></Reveal>)}</div></div></section>
+}

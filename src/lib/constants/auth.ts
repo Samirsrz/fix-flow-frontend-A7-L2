@@ -1,7 +1,7 @@
 import { Role } from "@/shared/types/api";
 
 export const ACCESS_COOKIE = "fixflow_access_token";
-
+export const REFRESH_COOKIE = "fixflow_refresh_token";
 export const ROLE_HOME: Record<Role, string> = {
   RESIDENT: "/resident",
   MANAGER: "/manager",

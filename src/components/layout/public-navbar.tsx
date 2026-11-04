@@ -41,7 +41,7 @@ export function PublicNavbar({
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -49,30 +49,27 @@ export function PublicNavbar({
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -12 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : -16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      className={cn(
-        "sticky top-0 z-50 h-16 transition-all duration-300",
-        scrolled
-          ? "border-b border-border bg-background/80 shadow-sm backdrop-blur"
-          : "bg-transparent",
-      )}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="sticky top-0 z-50 -mb-16 h-16 px-3 sm:px-4"
     >
-      <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+      <div
+        className={cn(
+          "mx-auto flex items-center justify-between gap-6 transition-all duration-300",
+          scrolled
+            ? "mt-2 h-14 max-w-5xl rounded-2xl border border-border/60 bg-background/70 px-4 shadow-lg shadow-primary/5 backdrop-blur-xl"
+            : "h-16 max-w-7xl px-1 sm:px-4 lg:px-6",
+        )}
+      >
         <Brand />
 
         <nav
-          className="hidden items-center gap-1 md:flex"
+          className="hidden items-center gap-1 rounded-full border border-border/60 bg-background/50 p-1 backdrop-blur md:flex"
           aria-label="Primary navigation"
         >
-          {links.map((link, index) => (
-            <NavLink
-              key={link.href}
-              {...link}
-              index={index}
-              pathname={pathname}
-            />
+          {links.map((link) => (
+            <NavLink key={link.href} {...link} pathname={pathname} />
           ))}
         </nav>
 
@@ -113,40 +110,32 @@ export function PublicNavbar({
 function NavLink({
   label,
   href,
-  index,
   pathname,
 }: {
   label: string;
   href: string;
-  index: number;
   pathname: string;
 }) {
   const active = pathname === href;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      className="relative"
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "relative rounded-full px-4 py-1.5 text-sm transition-colors hover:text-foreground",
+        active ? "text-primary" : "text-muted-foreground",
+      )}
     >
-      <Link
-        href={href}
-        className={cn(
-          "relative block rounded-md px-3 py-2 text-sm transition-colors hover:text-foreground",
-          active ? "text-foreground" : "text-muted-foreground",
-        )}
-      >
-        {label}
-        {active && (
-          <motion.span
-            layoutId="active-nav"
-            className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-primary"
-            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-          />
-        )}
-      </Link>
-    </motion.div>
+      {active && (
+        <motion.span
+          layoutId="active-nav"
+          className="absolute inset-0 rounded-full bg-primary/10"
+          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        />
+      )}
+      <span className="relative z-10">{label}</span>
+    </Link>
   );
 }
 
@@ -161,7 +150,7 @@ function AuthActions() {
         Log in
       </Button>
       <Button
-        className="group"
+        className="group rounded-full"
         nativeButton={false}
         render={<Link href="/register" />}
       >
