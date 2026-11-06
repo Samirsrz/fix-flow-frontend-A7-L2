@@ -45,7 +45,7 @@ interface RawWorker {
   user: { name: string; email: string };
   phone?: string;
   specialization?: string;
-  assignedIssues?: { id: string }[];
+  assignedIssues?: unknown[];
 }
 
 interface RawInvoice {
@@ -91,10 +91,7 @@ function mapWorker(raw: RawWorker): WorkerSummary {
     email: raw.user.email,
     phone: raw.phone,
     specialization: raw.specialization,
-    activeJobCount: raw.assignedIssues?.filter(
-      (issue: { status?: string }) =>
-        issue.status !== "CLOSED" && issue.status !== "REJECTED",
-    ).length ?? 0,
+    activeJobCount: raw.assignedIssues?.length ?? 0,
   };
 }
 
@@ -133,11 +130,10 @@ export function assignWorker(issueId: string, payload: AssignWorkerPayload) {
 }
 
 export function getWorkersForManager() {
-  return api<{ data: RawWorker[] }>("/admin/users?role=WORKER&limit=100", {
-    method: "GET",
-  }).then((res) => res.data.map(mapWorker));
+  return api<RawWorker[]>("/issue/workers", { method: "GET" }).then((res) =>
+    res.map(mapWorker),
+  );
 }
-
 export function getManagerResidents() {
   return api<{ data: { id: string; unitNumber?: string; user: { name: string; email: string } }[] }>(
     "/community?limit=1",

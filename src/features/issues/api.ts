@@ -92,7 +92,7 @@ export function getIssueById(id: string) {
 }
 
 export function getIssueUpdates(id: string) {
-  return api<RawWorkerUpdate[]>(`/issue/${id}/updates`, {
+  return api<RawWorkerUpdate[]>(`/issue/${id}/worker-updates`, {
     method: "GET",
   }).then((updates) => updates.map(mapUpdate));
 }
