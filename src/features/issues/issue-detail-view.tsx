@@ -15,7 +15,7 @@ import {
   Star,
   Wrench,
 } from "lucide-react"
-
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -62,6 +62,7 @@ export function IssueDetailView({
   const [action, setAction] = useState<"confirm" | "dispute" | null>(null)
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState("")
+  const router = useRouter()
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
@@ -148,7 +149,7 @@ index}`}
                     className="aspect-square overflow-hidden rounded-xl border bg-muted"
                   >
                     {/** biome-ignore lint/performance/noImgElement: <explanation> */}
-<img
+                    <img
                       src={src}
                       // biome-ignore lint/a11y/noRedundantAlt: <explanation>
                       alt={`Issue photo ${index + 1}`}
@@ -191,6 +192,20 @@ index}`}
               <Wrench className="ml-auto size-5 text-muted-foreground" />
             </CardContent>
           </Card>
+        )}
+
+        {/* Chat with Worker */}
+        {issue.assignedWorker && (
+          <div className="flex justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push(`/resident/issues/${issue.id}/chat`)}
+            >
+              <MessageSquare data-icon="inline-start" />
+              Chat with worker
+            </Button>
+          </div>
         )}
 
         {/* Worker Updates */}
@@ -250,7 +265,7 @@ imageIndex}`}
                             className="aspect-square overflow-hidden rounded-lg border bg-muted"
                           >
                             {/** biome-ignore lint/performance/noImgElement: <explanation> */}
-<img
+                            <img
                               src={image}
                               // biome-ignore lint/a11y/noRedundantAlt: <explanation>
                               alt={`Worker update photo ${imageIndex + 1}`}
