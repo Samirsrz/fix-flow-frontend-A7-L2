@@ -132,7 +132,7 @@ export default function ResidentHomePage() {
               label: "My payments",
               description: "View and pay maintenance invoices",
               icon: CreditCard,
-              href: "/resident/payments",
+              href: "/resident/payment",
               variant: "outline" as const,
             },
             {

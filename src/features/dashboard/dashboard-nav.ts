@@ -24,7 +24,7 @@ export type NavItem = {
 export const residentNav: NavItem[] = [
   { label: "Home", href: "/resident", icon: Home },
   { label: "My Issues", href: "/resident/issues", icon: ClipboardList },
-  { label: "Payments", href: "/resident/payments", icon: CreditCard },
+  { label: "Payments", href: "/resident/payment", icon: CreditCard },
   { label: "Chat", href: "/resident/chat", icon: MessageCircle },
   { label: "Profile", href: "/resident/profile", icon: UserRound },
 ]
