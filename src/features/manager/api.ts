@@ -165,5 +165,8 @@ export function getManagerInvoices(query: Record<string, string> = {}) {
 }
 
 export function generateInvoice(payload: GenerateInvoicePayload) {
-  return api("/invoice", { method: "POST", body: payload });
+  return api("/invoice", {
+    method: "POST",
+    body: { ...payload, amount: Number(payload.amount) },
+  });
 }

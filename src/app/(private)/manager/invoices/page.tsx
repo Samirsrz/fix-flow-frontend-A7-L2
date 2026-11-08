@@ -15,14 +15,14 @@ export default function ManagerInvoicesPage() {
   const { mutateAsync: generateInvoice, isPending: isGenerating } =
     useGenerateInvoice();
 
-  const handleGenerate = async (data: GenerateInvoiceData) => {
-    await generateInvoice({
-      period: data.period,
-      dueDate: new Date(data.dueDate).toISOString(),
-      amount: data.amount,
-      residentId: data.residentId,
-    });
-  };
+const handleGenerate = async (data: GenerateInvoiceData) => {
+  await generateInvoice({
+    period: data.period,
+    dueDate: new Date(data.dueDate).toISOString(),
+    amount: data.amount,
+    residentId: data.residentId,
+  });
+};
 
   return (
     <ManagerInvoicesView

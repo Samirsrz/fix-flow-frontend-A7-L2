@@ -1,0 +1,21 @@
+"use client"
+
+import { useState } from "react"
+import { motion } from "motion/react"
+import { ChevronDown, ChevronLeft, ChevronRight, FileClock } from "lucide-react"
+import type { AuditLog } from "./admin-types"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const initials = (name: string) => name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase()
+const formatAction = (action: string) => action.toLowerCase().split("_").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ")
+const relative = (date: string) => { const diff = Date.now() - new Date(date).getTime(); const minutes = Math.floor(diff / 60000); if (minutes < 60) return `${Math.max(minutes, 1)}m ago`; const hours = Math.floor(minutes / 60); if (hours < 24) return `${hours}h ago`; return `${Math.floor(hours / 24)}d ago` }
+
+export function AdminAuditLogsView({ logs, isLoading, total, page, onPageChange }: { logs: AuditLog[]; isLoading: boolean; total: number; page: number; onPageChange: (page: number) => void }) {
+  const [expanded, setExpanded] = useState<string | null>(null); const totalPages = Math.max(1, Math.ceil(total / Math.max(logs.length, 1)))
+  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+  return <div className="flex flex-col gap-6"><div><h1 className="font-heading text-3xl font-semibold tracking-tight">Audit Log</h1><p className="mt-1 text-sm text-muted-foreground">A transparent timeline of important workspace activity.</p></div><Card className="rounded-2xl border-border/60"><CardContent className="p-4 sm:p-6">{isLoading ? <div className="flex flex-col gap-5">{Array.from({ length: 5 }).map((_, index) => <div key={index} className="flex gap-4"><Skeleton className="size-10 rounded-full" /><Skeleton className="h-20 flex-1" /></div>)}</div> : <div className="relative flex flex-col">{logs.map((log, index) => <motion.div key={log.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * .05 }} className="relative flex gap-4 pb-7 last:pb-0"><div className="absolute top-10 bottom-0 left-5 w-px bg-border" /><Avatar className="relative z-10"><AvatarFallback>{initials(log.actor.name)}</AvatarFallback></Avatar><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><span className="font-medium">{log.actor.name}</span><Badge variant="secondary">{log.actor.role}</Badge><time title={new Date(log.createdAt).toLocaleString()} className="text-xs text-muted-foreground">{relative(log.createdAt)}</time></div><p className="mt-2 text-sm"><span className="font-medium">{formatAction(log.action)}</span><span className="text-muted-foreground"> · {log.entityType} / {log.entityId}</span></p>{log.metadata && <div className="mt-3"><Button variant="ghost" size="sm" onClick={() => setExpanded(expanded === log.id ? null : log.id)}>{expanded === log.id ? "Hide details" : "View details"}<ChevronDown className={`transition-transform ${expanded === log.id ? "rotate-180" : ""}`} /></Button>{expanded === log.id && <pre className="mt-2 max-w-full overflow-x-auto rounded-lg bg-muted p-3 text-xs text-muted-foreground">{JSON.stringify(log.metadata, null, 2)}</pre>}</div>}</div></motion.div>)}{!logs.length && <div className="flex flex-col items-center gap-2 py-12 text-center"><FileClock className="text-muted-foreground" /><p className="font-medium">No activity yet</p><p className="text-sm text-muted-foreground">Admin actions will appear here.</p></div>}</div>}<div className="mt-6 flex items-center justify-between border-t pt-4"><span className="text-sm text-muted-foreground">Page {page} of {totalPages}</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}><ChevronLeft data-icon="inline-start" />Previous</Button><Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>Next<ChevronRight data-icon="inline-end" /></Button></div></div></CardContent></Card></div>
+}
