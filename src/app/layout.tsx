@@ -9,23 +9,24 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 
-const jetbrainsMonoHeading = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-heading",
-});
+// const jetbrainsMonoHeading = JetBrains_Mono({
+//   subsets: ["latin"],
+//   variable: "--font-heading",
+// });
 
-const notoSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-serif" });
+// const notoSerif = Noto_Serif({ subsets: ["latin"], variable: "--font-serif" });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 const description =
   "Report issues, track repairs, and pay community maintenance fees in one place. FixFlow connects residents, managers, and maintenance workers.";
@@ -54,17 +55,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn(
         "h-full",
         "antialiased",
-        geistSans.variable,
-        geistMono.variable,
+        // geistSans.variable,
+        // geistMono.variable,
         "font-serif",
-        notoSerif.variable,
-        jetbrainsMonoHeading.variable,
+        // notoSerif.variable,
+        // jetbrainsMonoHeading.variable,
       )}
     >
       <body className="min-h-full flex flex-col">
-        <QueryProvider>{children}</QueryProvider>
-        <Toaster richColors position="top-right" />
-      </body>
+  <ThemeProvider>
+    <QueryProvider>{children}</QueryProvider>
+    <Toaster richColors position="top-right" />
+  </ThemeProvider>
+</body>
     </html>
   );
 }

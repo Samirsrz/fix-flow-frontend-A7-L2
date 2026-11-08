@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import type { DashboardUser } from "./dashboard-sidebar"
+import { ThemeToggle } from "@/components/layout/theme-toggle"
 
 type DashboardTopbarProps = { title?: string; actions?: ReactNode; user: DashboardUser }
 
@@ -20,6 +21,7 @@ export function DashboardTopbar({ title, actions, user }: DashboardTopbarProps) 
           <span className="max-w-32 truncate text-sm font-medium">{user.name}</span>
           <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">{user.role}</Badge>
         </div>
+        <ThemeToggle />
         <Button variant="ghost" size="icon" aria-label="Notifications">
           <Bell aria-hidden="true" />
         </Button>

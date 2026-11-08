@@ -8,6 +8,7 @@ import {
   useIssueUpdates,
   useResolveIssue,
 } from "@/features/issues/hooks";
+import PageLoader from "@/components/ui/page-loader";
 
 export default function ResidentIssueDetailPage({
   params,
@@ -31,13 +32,7 @@ export default function ResidentIssueDetailPage({
   };
 
   if (isLoadingDetail || !issue) {
-    return (
-      <div className="space-y-4 p-6">
-        <div className="h-8 w-32 animate-pulse rounded bg-muted" />
-        <div className="h-48 animate-pulse rounded-xl bg-muted" />
-        <div className="h-32 animate-pulse rounded-xl bg-muted" />
-      </div>
-    );
+     return <PageLoader message="Loading issue..." />;
   }
 
   return (
