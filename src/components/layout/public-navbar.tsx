@@ -10,6 +10,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { type PublicUser, UserMenu } from "@/components/layout/user-menu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./theme-toggle";
 
 export type PublicNavbarProps = {
   user: PublicUser | null;
@@ -74,22 +75,23 @@ export function PublicNavbar({
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          {isLoading ? (
-            <div
-              className="h-9 w-44 animate-pulse rounded-md bg-muted"
-              aria-hidden="true"
-            />
-          ) : user ? (
-            <UserMenu
-              user={user}
-              dashboardHref={dashboardHref}
-              profileHref={profileHref}
-              onLogout={onLogout}
-              isLoggingOut={isLoggingOut}
-            />
-          ) : (
-            <AuthActions />
-          )}
+       <ThemeToggle />
+{isLoading ? (
+  <div
+    className="h-9 w-44 animate-pulse rounded-md bg-muted"
+    aria-hidden="true"
+  />
+) : user ? (
+  <UserMenu
+    user={user}
+    dashboardHref={dashboardHref}
+    profileHref={profileHref}
+    onLogout={onLogout}
+    isLoggingOut={isLoggingOut}
+  />
+) : (
+  <AuthActions />
+)}
         </div>
 
         <div className="md:hidden">
@@ -142,6 +144,7 @@ function NavLink({
 function AuthActions() {
   return (
     <>
+      {/* <ThemeToggle /> */}
       <Button
         variant="ghost"
         nativeButton={false}
