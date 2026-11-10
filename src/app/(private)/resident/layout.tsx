@@ -3,6 +3,7 @@
 import { useLogout, useSession } from "@/features/auth/hooks";
 import { DashboardShell } from "@/features/dashboard/dashboard-shell";
 import { residentNav } from "@/features/dashboard/dashboard-nav";
+import { ProfileGuard } from "@/features/auth/profile-guard";
 
 export default function ResidentLayout({
   children,
@@ -21,7 +22,7 @@ export default function ResidentLayout({
       onLogout={() => logout()}
       isLoggingOut={isLoggingOut}
     >
-      {children}
+      <ProfileGuard>{children}</ProfileGuard>
     </DashboardShell>
   );
 }

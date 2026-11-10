@@ -96,12 +96,19 @@ function mapWorker(raw: RawWorker): WorkerSummary {
 }
 
 function mapInvoice(raw: RawInvoice): InvoiceSummary {
+  const dueDate = new Date(raw.dueDate);
+
+  const computedStatus: InvoiceSummary["status"] =
+    raw.status === "PENDING" && dueDate < new Date()
+      ? "OVERDUE"
+      : raw.status;
+
   return {
     id: raw.id,
     period: raw.period,
     amount: raw.amount,
     dueDate: raw.dueDate,
-    status: raw.status,
+    status: computedStatus,
     residentName: raw.resident?.user?.name ?? "Unknown",
     residentEmail: raw.resident?.user?.email ?? "",
   };

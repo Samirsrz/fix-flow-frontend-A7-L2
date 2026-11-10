@@ -13,7 +13,15 @@ interface RawInvoice {
 }
 
 function mapInvoice(raw: RawInvoice): Invoice {
-  const dueDate = new Date(raw.dueDate).toLocaleDateString("en-US", {
+  const dueDate = new Date(raw.dueDate);
+
+  // Compute overdue client-side since backend never auto-flips it
+  const computedStatus: Invoice["status"] =
+    raw.status === "PENDING" && dueDate < new Date()
+      ? "OVERDUE"
+      : raw.status;
+
+  const dueDateFormatted = dueDate.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -31,8 +39,8 @@ function mapInvoice(raw: RawInvoice): Invoice {
     id: raw.id,
     period,
     amount: raw.amount,
-    dueDate,
-    status: raw.status,
+    dueDate: dueDateFormatted,
+    status: computedStatus,
     communityName: raw.community?.name ?? "Community",
     payments: raw.payments,
   };

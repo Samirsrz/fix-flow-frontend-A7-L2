@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import type { NavItem } from "./dashboard-nav"
+import { usePathname } from "next/navigation"
 
 export type DashboardUser = { name: string; email: string; role: string }
 
@@ -28,7 +29,15 @@ type DashboardSidebarProps = {
 
 const initials = (name: string) => name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase()
 
+const isRootHref = (href: string) => href.split("/").filter(Boolean).length === 1
+
+const isActivePath = (pathname: string, href: string) =>
+  isRootHref(href)
+    ? pathname === href
+    : pathname === href || pathname.startsWith(`${href}/`)
+
 export function DashboardSidebar({ navItems, user, onLogout, isLoggingOut }: DashboardSidebarProps) {
+  
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border">
       <SidebarHeader className="h-16 justify-center px-3">

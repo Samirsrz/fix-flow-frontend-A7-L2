@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
+import type { ReactNode } from "react";
 import {
   Eye,
   EyeOff,
@@ -41,7 +42,8 @@ type Props = {
   onGoogleLogin: () => void;
   isLoading: boolean;
   isGoogleLoading: boolean;
-};
+  googleButton?: React.ReactNode;
+}
 
 const DEMO_ROLES = [
   {
@@ -106,6 +108,7 @@ export default function LoginForm({
   onGoogleLogin,
   isLoading,
   isGoogleLoading,
+  googleButton,
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
@@ -302,20 +305,24 @@ export default function LoginForm({
             <div className="h-px flex-1 bg-border" />
           </div>
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onGoogleLogin}
-            disabled={isGoogleLoading}
-            className="w-full"
-          >
-            {isGoogleLoading ? (
-              <Loader2 data-icon="inline-start" className="animate-spin" />
-            ) : (
-              <GoogleIcon />
-            )}
-            {isGoogleLoading ? "Connecting…" : "Continue with Google"}
-          </Button>
+         {googleButton ? (
+  googleButton
+) : (
+  <Button
+    type="button"
+    variant="outline"
+    onClick={onGoogleLogin}
+    disabled={isGoogleLoading}
+    className="w-full"
+  >
+    {isGoogleLoading ? (
+      <Loader2 data-icon="inline-start" className="animate-spin" />
+    ) : (
+      <GoogleIcon />
+    )}
+    {isGoogleLoading ? "Connecting…" : "Continue with Google"}
+  </Button>
+)}
         </motion.div>
       </section>
     </main>
