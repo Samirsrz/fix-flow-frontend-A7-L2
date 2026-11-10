@@ -37,7 +37,7 @@ const isActivePath = (pathname: string, href: string) =>
     : pathname === href || pathname.startsWith(`${href}/`)
 
 export function DashboardSidebar({ navItems, user, onLogout, isLoggingOut }: DashboardSidebarProps) {
-  
+  const pathname = usePathname()
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border">
       <SidebarHeader className="h-16 justify-center px-3">
@@ -50,20 +50,30 @@ export function DashboardSidebar({ navItems, user, onLogout, isLoggingOut }: Das
       </SidebarHeader>
       <SidebarContent className="px-2 py-4">
         <SidebarMenu>
-          {navItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <SidebarMenuItem key={item.href}>
-                <Tooltip>
-                  <TooltipTrigger render={<SidebarMenuButton render={<Link href={item.href} />} />}>
-                    <Icon aria-hidden="true" />
-                    <span>{item.label}</span>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" className="md:hidden">{item.label}</TooltipContent>
-                </Tooltip>
-              </SidebarMenuItem>
-            )
-          })}
+   {navItems.map((item) => {
+  const Icon = item.icon
+  const active = isActivePath(pathname, item.href)
+  return (
+    <SidebarMenuItem key={item.href}>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+          <SidebarMenuButton
+  isActive={active}
+  className="data-active:bg-primary/10 data-active:font-medium data-active:text-primary data-active:hover:bg-primary/15 data-active:hover:text-primary"
+  render={<Link href={item.href} aria-current={active ? "page" : undefined} />}
+/>
+          }
+        >
+          <Icon aria-hidden="true" />
+          <span>{item.label}</span>
+          
+        </TooltipTrigger>
+        <TooltipContent side="right" className="md:hidden">{item.label}</TooltipContent>
+      </Tooltip>
+    </SidebarMenuItem>
+  )
+})}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-2">
